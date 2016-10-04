@@ -52,6 +52,7 @@ void delay(unsigned int i) {
 
 int main(void) {
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC, ENABLE);
 
 	GPIO_InitTypeDef gpioInitStruct;
 	gpioInitStruct.GPIO_Pin = GPIO_Pin_5;
@@ -64,13 +65,23 @@ int main(void) {
 
 	GPIO_SetBits(GPIOA, GPIO_Pin_5);
 
+
+	gpioInitStruct.GPIO_Pin = GPIO_Pin_13;
+	gpioInitStruct.GPIO_Mode = GPIO_Mode_IN;
+	gpioInitStruct.GPIO_OType = GPIO_OType_PP;
+	gpioInitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+
+	GPIO_Init(GPIOC, &gpioInitStruct);
+
+	GPIO_SetBits(GPIOC, GPIO_Pin_13);
+
 	/* Infinite loop */
 	while (1) {
 
-		 GPIOA->BSRRL |= (1 << 5);
-	     delay(100000);
-		 GPIOA->BSRRH |= (1 << 5);
-	     delay(100000);
+		unsigned int button = GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_13);
+		if (button) GPIOA->BSRRL |= (1 << 5);
+		else  GPIOA->BSRRH |= (1 << 5);
+		delay(10000);
 	}
 
 	return 0;
