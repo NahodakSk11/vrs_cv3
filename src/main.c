@@ -55,37 +55,27 @@ int main(void) {
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC, ENABLE);
 
 	GPIO_InitTypeDef gpioInitStruct;
-	gpioInitStruct.GPIO_Pin = GPIO_Pin_5;
+
 	gpioInitStruct.GPIO_Mode = GPIO_Mode_OUT;
 	gpioInitStruct.GPIO_OType = GPIO_OType_PP;
-	gpioInitStruct.GPIO_PuPd = GPIO_PuPd_UP;
-	gpioInitStruct.GPIO_Speed = GPIO_Speed_400KHz;
+	gpioInitStruct.GPIO_Pin = GPIO_Pin_5;
+	gpioInitStruct.GPIO_Speed = GPIO_Speed_40MHz;
 
 	GPIO_Init(GPIOA, &gpioInitStruct);
 
-	GPIO_SetBits(GPIOA, GPIO_Pin_5);
 
+	//GPIO_SetBits(GPIOA, GPIO_Pin_5);
 
-	gpioInitStruct.GPIO_Pin = GPIO_Pin_13;
-	gpioInitStruct.GPIO_Mode = GPIO_Mode_IN;
-	gpioInitStruct.GPIO_OType = GPIO_OType_PP;
-	gpioInitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-
-	GPIO_Init(GPIOC, &gpioInitStruct);
-
-	GPIO_SetBits(GPIOC, GPIO_Pin_13);
-
-	/* Infinite loop */
-	while (1) {
-
-		unsigned int button = GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_13);
-		if (button) GPIOA->BSRRL |= (1 << 5);
-		else  GPIOA->BSRRH |= (1 << 5);
-		delay(10000);
-	}
+		/* Infinite loop */
+		while (1) {
+			GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
+			//GPIOA->ODR ^= (1 << 5);
+			delay(100000);
+		}
 
 	return 0;
 }
+
 
 #ifdef  USE_FULL_ASSERT
 
