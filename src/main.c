@@ -74,10 +74,18 @@ int main(void) {
 
 		/* Infinite loop */
 		while (1) {
+			static unsigned int lastButton = 0;
+			unsigned int button = GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_13);
+			unsigned int change = button ^ lastButton;
+			if (change && button) GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
+			lastButton = button;
+		    delay(10000);
+
+			/*
 			unsigned int button = GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_13);
 			if (button) GPIO_SetBits(GPIOA, GPIO_Pin_5);//GPIOA->BSRRL |= (1 << 5);
 			else  GPIO_ResetBits(GPIOA, GPIO_Pin_5);//GPIOA->BSRRH |= (1 << 5);
-			delay(10000);
+			delay(10000);*/
 		}
 
 	return 0;
