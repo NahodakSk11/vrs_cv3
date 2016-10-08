@@ -64,13 +64,20 @@ int main(void) {
 	GPIO_Init(GPIOA, &gpioInitStruct);
 
 
-	//GPIO_SetBits(GPIOA, GPIO_Pin_5);
+	gpioInitStruct.GPIO_Pin = GPIO_Pin_13;
+	gpioInitStruct.GPIO_Mode = GPIO_Mode_IN;
+	gpioInitStruct.GPIO_OType = GPIO_OType_PP;
+	gpioInitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+
+	GPIO_Init(GPIOC, &gpioInitStruct);
+
 
 		/* Infinite loop */
 		while (1) {
-			GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
-			//GPIOA->ODR ^= (1 << 5);
-			delay(100000);
+			unsigned int button = GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_13);
+			if (button) GPIO_SetBits(GPIOA, GPIO_Pin_5);//GPIOA->BSRRL |= (1 << 5);
+			else  GPIO_ResetBits(GPIOA, GPIO_Pin_5);//GPIOA->BSRRH |= (1 << 5);
+			delay(10000);
 		}
 
 	return 0;
